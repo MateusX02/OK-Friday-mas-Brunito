@@ -1216,7 +1216,7 @@ class PlayState extends MusicBeatState
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
 	{
 		// TO DO: Make this more flexible, maybe?
-		if(ClientPrefs.dadia && dialogueFile.dialogue.length > 1) { //Assim vai bugar menos com os dialogos da week 6
+		if(!ClientPrefs.dadia && dialogueFile.dialogue.length > 1) { //Assim vai bugar menos com os dialogos da week 6
 			inCutscene = true;
 			CoolUtil.precacheSound('dialogue');
 			CoolUtil.precacheSound('dialogueClose');
