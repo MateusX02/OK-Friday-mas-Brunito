@@ -22,7 +22,7 @@ class Main extends Sprite
 	public static var memoryCounter:MemoryCounter;
 
 	#if android
-	public static var path = lime.system.System.applicationStorageDirectory; // path to storage folder
+	public static var path:String = lime.system.System.applicationStorageDirectory; // path to storage folder
 	#end
 
 
@@ -75,7 +75,7 @@ class Main extends Sprite
 		initialState = TitleState;
 		#end
 		
-		ClientPrefs.loadDefaultKeys();		
+		ClientPrefs.startControls();
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 		
 		fpsVar = new FPS(10, 3, 0xFFFFFF);

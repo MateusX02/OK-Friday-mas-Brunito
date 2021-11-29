@@ -119,9 +119,10 @@ class Character extends FlxSprite
 				#end
 
 				var json:CharacterFile = cast Json.parse(rawJson);
-				if(Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT))) {
+				if (Assets.exists(Paths.image('images/' + json.image))) {
 					frames = Paths.getPackerAtlas(json.image);
 				} else {
+					json.image = 'images/' + curCharacter; // Sistema anti burro, mas talvez o burro seja eu ;-;
 					frames = Paths.getSparrowAtlas(json.image);
 				}
 				imageFile = json.image;
@@ -134,7 +135,8 @@ class Character extends FlxSprite
 
 				positionArray = json.position;
 				cameraPosition = json.camera_position;
-
+				if(Paths.fileExists('images/icons/' + json.healthicon + '.png', IMAGE)){healthIcon = json.healthicon;}
+				else {healthIcon = curCharacter;} // template purposes
 				healthIcon = json.healthicon;
 				singDuration = json.sing_duration;
 				flipX = !!json.flip_x;

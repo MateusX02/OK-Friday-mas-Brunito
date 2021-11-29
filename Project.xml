@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="FNF BS Engine Mobile" file="BSEngine" packageName="com.teamsiver.BSEngine" package="com.teamsiver.BSEngine" main="Main" version="0.2.7" company="teamsiver" />
+	<app title="FNF BS Engine Mobile" file="BS-Engine" packageName="com.teamsilver.bs" package="com.teamsilver.bs" main="Main" version="0.2.7" company="teamsilver" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -58,7 +58,6 @@
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
-	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB" />
 	<library name="videos"        preload="true"/>
 	<section if="PRELOAD_ALL">
 		<library name="songs"         preload="true" />
@@ -106,7 +105,7 @@
 	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
 	
-	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
+	<assets path='example_mods' rename='mods' embed='false' if="desktop"/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<!-- <template path='mods' /> -->
 	
@@ -133,7 +132,6 @@
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="discord_rpc" if="desktop"/>
 	<haxelib name="extension-webview"/>
-	<haxelib name="hxvm-luajit"/>
 
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 

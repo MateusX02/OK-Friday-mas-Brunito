@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 import flixel.addons.ui.FlxUIButton;
 import Achievements;
 import editors.MasterEditorMenu;
@@ -49,6 +50,8 @@ class MainMenuState extends MusicBeatState
 
 	var secreto:FlxUIButton;
 
+	var logoBl:FlxSprite;
+
 	var checkiftouch:Bool = false;
 
 	override function create()
@@ -81,7 +84,7 @@ class MainMenuState extends MusicBeatState
 	
 		storybotao = new FlxUIButton(0, 30, "APAGOU", function() {
 			curSelected = 0;
-			if(curSelected == 0){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 0 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
 		});
         storybotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		storybotao.resize(500,120);
@@ -91,7 +94,7 @@ class MainMenuState extends MusicBeatState
 
 		freebotao = new FlxUIButton(0, 170, "OS", function() {
 			curSelected = 1;
-			if(curSelected == 1){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 1 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
 		});
         freebotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		freebotao.resize(420,120);
@@ -101,7 +104,7 @@ class MainMenuState extends MusicBeatState
 
 		creditbotao = new FlxUIButton(0, 450, "Né", function() {
 			curSelected = 3;
-			if(curSelected == 3){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 3 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
 			});
 		creditbotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		creditbotao.resize(420,120);
@@ -111,7 +114,7 @@ class MainMenuState extends MusicBeatState
 
 		opcaobotao = new FlxUIButton(0, 590, "SAFADO", function() {
 			curSelected = 4;
-			if(curSelected == 4){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 4 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
 		});
         opcaobotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		opcaobotao.resize(420,120);
@@ -121,7 +124,7 @@ class MainMenuState extends MusicBeatState
 
 		awardsbotao = new FlxUIButton(0, 310, "MENUS", function() {
 			curSelected = 2;		
-			if(curSelected == 2){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 2 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
 					});
 		awardsbotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		awardsbotao.resize(400,120);
@@ -130,13 +133,30 @@ class MainMenuState extends MusicBeatState
 		add(awardsbotao);
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuPRINCIPAL'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
+
+		logoBl = new FlxSprite(500, 650);
+		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.setGraphicSize(Std.int(logoBl.width * 0.5));
+		logoBl.updateHitbox();
+
+		add(logoBl);
+
+		new FlxTimer().start(0.01, function(tmr:FlxTimer)
+			{
+				if (logoBl.angle == -4)
+					FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+				if (logoBl.angle == 4)
+					FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
+			}, 0);
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollowPos = new FlxObject(0, 0, 1, 1);
@@ -155,7 +175,6 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
-			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
@@ -249,8 +268,6 @@ class MainMenuState extends MusicBeatState
 				{
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 
-					checkiftouch = false; //This should be enough
-
 					menuItems.forEach(function(spr:FlxSprite)
 					{
 						if (curSelected != spr.ID)
@@ -260,6 +277,7 @@ class MainMenuState extends MusicBeatState
 								onComplete: function(twn:FlxTween)
 								{
 									spr.kill();
+									checkiftouch = false; //This should be enough
 								}
 							});
 						}

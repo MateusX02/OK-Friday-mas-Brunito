@@ -167,8 +167,7 @@ class TitleState extends MusicBeatState
 		logoBl = new FlxSprite(-150, -100);
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
-		logoBl.animation.play('bump');
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 		logoBl.updateHitbox();
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
@@ -380,7 +379,11 @@ class TitleState extends MusicBeatState
 						}
 					}
 				}
-			}*/
+						}*/
+		if (pressedEnter && !skippedIntro)
+		{
+			skipIntro();
+		}
 		}
 
 		if(swagShader != null)
@@ -431,7 +434,7 @@ class TitleState extends MusicBeatState
 		super.beatHit();
 
 		if(logoBl != null) 
-			logoBl.animation.play('bump');
+			logoBl.animation.play('bump', true);
 
 		if(gfDance != null) {
 			danceLeft = !danceLeft;
@@ -458,9 +461,9 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = 'In association \nwith';
 				// credTextShit.screenCenter();
 				case 5:
-					createCoolText(['Isso e um mod'], -60);
+					createCoolText(['Isso e um remake mobile'], -60);
 				case 6:
-					addMoreText('desse jooj aqui kek', -60);
+					addMoreText('dessa engine aqui oh', -60);
 					logoSpr.visible = true;
 				// credTextShit.text += '\nNewgrounds';
 				case 8:
@@ -499,14 +502,31 @@ class TitleState extends MusicBeatState
 	var skippedIntro:Bool = false;
 
 	function skipIntro():Void
-	{
-		if (!skippedIntro)
 		{
-			remove(logoSpr);
+			if (!skippedIntro)
+			{
 
-			FlxG.camera.flash(FlxColor.WHITE, 2);
-			remove(credGroup);
-			skippedIntro = true;
+				remove(logoSpr);
+				FlxG.camera.flash(FlxColor.WHITE, 4);
+				remove(credGroup);
+	
+				FlxTween.tween(logoBl, {y: -100}, 1.4, {ease: FlxEase.expoInOut});
+	
+				logoBl.angle = -4;
+	
+				new FlxTimer().start(0.01, function(tmr:FlxTimer)
+				{
+					if (logoBl.angle == -4)
+						FlxTween.angle(logoBl, logoBl.angle, 4, 4, {ease: FlxEase.quartInOut});
+					if (logoBl.angle == 4)
+						FlxTween.angle(logoBl, logoBl.angle, -4, 4, {ease: FlxEase.quartInOut});
+				}, 0);
+	
+				// It always bugged me that it didn't do this before.
+				// Skip ahead in the song to the drop.
+				FlxG.sound.music.time = 9400; // 9.4 seconds
+	
+				skippedIntro = true;
+			}
 		}
-	}
 }

@@ -109,6 +109,11 @@ class Paths
 		return 'assets/$file';
 	}
 
+	inline public static function getPreloadPathlua(file:String = '')
+		{
+			return Main.path + 'assets/$file';
+		}
+
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
 	{
 		return getPath(file, type, library);
@@ -131,17 +136,16 @@ class Paths
 
 	inline static public function lua(key:String, ?library:String)
 	{
-		return Main.path + getPath('data/$key.lua', TEXT, library);
+		return Main.path + getPath('$key.lua', TEXT, library);
+	}
+
+	inline static public function luaAsset(key:String, ?library:String)
+	{
+		return getPath('$key.lua', TEXT, library);
 	}
 
 	static public function video(key:String)
 	{
-		#if MODS_ALLOWED
-		var file:String = modsVideo(key);
-		if(FileSystem.exists(file)) {
-			return file;
-		}
-		#end
 		return 'assets/videos/$key.$VIDEO_EXT';
 	}
 
@@ -282,6 +286,11 @@ class Paths
 		#end
 	}
 
+	inline static public function getSparrowAtlaslua(key:String, ?library:String)
+	{
+		return FlxAtlasFrames.fromSparrow(image(key, library), file(Main.path + 'images/$key.xml', library));
+	}
+
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{
 		#if MODS_ALLOWED
@@ -317,7 +326,7 @@ class Paths
 	}
 
 	inline static public function mods(key:String = '') {
-		return Main.path + 'mods/' + key;
+		return Main.path + 'assets/' + key;
 	}
 
 	inline static public function modsJson(key:String) {
@@ -359,7 +368,7 @@ class Paths
 				return fileToCheck;
 			}
 		}
-		return Main.path + 'mods/' + key;
+		return Main.path + 'assets/' + key; //Yeah transferencia completa omega kek
 	}
 	#end
 }

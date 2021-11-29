@@ -34,29 +34,30 @@ class ClientPrefs {
 	public static var noteSize:Float = 0.7;
 	public static var scroll:Bool = false;
 
-	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
-	public static var keyBinds:Map<String, Array<FlxKey>> = [
-		//Key Bind, Name for ControlsSubState
-		'note_left'		=> [A, LEFT],
-		'note_down'		=> [S, DOWN],
-		'note_up'		=> [W, UP],
-		'note_right'	=> [D, RIGHT],
-		
-		'ui_left'		=> [A, LEFT],
-		'ui_down'		=> [S, DOWN],
-		'ui_up'			=> [W, UP],
-		'ui_right'		=> [D, RIGHT],
-		
-		'accept'		=> [SPACE, ENTER],
-		'back'			=> [BACKSPACE, ESCAPE],
-		'pause'			=> [ENTER, ESCAPE],
-		'reset'			=> [R, NONE],
-	];
-	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
+	//Every key has two binds, these binds are defined on defaultKeys! If you want your control to be changeable, you have to add it on ControlsSubState (inside OptionsState.hx)'s list
+	public static var keyBinds:Map<String, Dynamic> = new Map<String, Dynamic>();
+	public static var defaultKeys:Map<String, Dynamic>;
 
-		public static function loadDefaultKeys() {
+	public static function startControls() {
+		//Key Bind, Name for ControlsSubState
+		keyBinds.set('note_left', [A, LEFT]);
+		keyBinds.set('note_down', [S, DOWN]);
+		keyBinds.set('note_up', [W, UP]);
+		keyBinds.set('note_right', [D, RIGHT]);
+		
+		keyBinds.set('ui_left', [A, LEFT]);
+		keyBinds.set('ui_down', [S, DOWN]);
+		keyBinds.set('ui_up', [W, UP]);
+		keyBinds.set('ui_right', [D, RIGHT]);
+		
+		keyBinds.set('accept', [SPACE, ENTER]);
+		keyBinds.set('back', [BACKSPACE, ESCAPE]);
+		keyBinds.set('pause', [ENTER, ESCAPE]);
+		keyBinds.set('reset', [R, NONE]);
+
+
+		// Don't delete this
 		defaultKeys = keyBinds.copy();
-		//trace(defaultKeys);
 	}
 
 	public static function saveSettings() {
@@ -191,7 +192,7 @@ class ClientPrefs {
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2', 'ninjamuffin99');
 		if(save != null && save.data.customControls != null) {
-			var loadedControls:Map<String, Array<FlxKey>> = save.data.customControls;
+			var loadedControls:Map<String, Dynamic> = save.data.customControls;
 			for (control => keys in loadedControls) {
 				keyBinds.set(control, keys);
 			}

@@ -213,7 +213,7 @@ class NotesSubstate extends MusicBeatSubstate
 
 	var posX = 250;
 	public function new() {
-		super();
+		super();	
 
 		grpNotes = new FlxTypedGroup<FlxSprite>();
 		add(grpNotes);
@@ -253,12 +253,11 @@ class NotesSubstate extends MusicBeatSubstate
 		}
 		hsvText = new Alphabet(0, 0, "Hue    Saturation  Brightness", false, false, 0, 0.65);
 		add(hsvText);
+		changeSelection();
 
 		#if mobileC
-        addVirtualPad(FULL, A_B);
-        #end
-
-		changeSelection();
+		addVirtualPad(FULL, A_B);
+		#end			
 	}
 
 	var changingNote:Bool = false;
@@ -365,7 +364,6 @@ class NotesSubstate extends MusicBeatSubstate
 		}
 
 		if (controls.BACK || (changingNote && controls.ACCEPT)) {
-			remove(_virtualpad);
 			changeSelection();
 			if(!changingNote) {
 				grpNumbers.forEachAlive(function(spr:Alphabet) {
@@ -501,6 +499,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
 	private var grpInputsAlt:Array<AttachedText> = [];
+	private var controlMap:Map<String, Dynamic>;
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
 
@@ -509,6 +508,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
+		controlMap = ClientPrefs.keyBinds.copy();
 		optionShit.push(['']);
 		optionShit.push([defaultKey]);
 
@@ -539,6 +539,10 @@ class ControlsSubstate extends MusicBeatSubstate {
 			}
 		}
 		changeSelection();
+
+		#if mobileC
+		addVirtualPad(FULL, A_B);
+		#end		
 	}
 
 	var leaving:Bool = false;
@@ -555,15 +559,19 @@ class ControlsSubstate extends MusicBeatSubstate {
 				changeAlt();
 			}
 
-			if (controls.BACK || FlxG.android.justReleased.BACK) { //haha sistema anti burrice
+			if (controls.BACK || FlxG.android.justReleased.BACK) {
+				ClientPrefs.keyBinds = controlMap.copy();
 				ClientPrefs.reloadControls();
+				grpOptions.forEachAlive(function(spr:Alphabet) {
+					spr.alpha = 0;
+				});
 				close();
-				FlxG.sound.play(Paths.sound('cancelMenu'));
+				FlxG.sound.play(Paths.sound('cancelMenu'));	
 			}
 
-			if(controls.ACCEPT || FlxG.keys.justPressed.ENTER && nextAccept <= 0) {
+			if(controls.ACCEPT && nextAccept <= 0) {
 				if(optionShit[curSelected][0] == defaultKey) {
-					ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
+					controlMap = ClientPrefs.defaultKeys.copy();
 					reloadKeys();
 					changeSelection();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -581,14 +589,14 @@ class ControlsSubstate extends MusicBeatSubstate {
 		} else {
 			var keyPressed:Int = FlxG.keys.firstJustPressed();
 			if (keyPressed > -1) {
-				var keysArray:Array<FlxKey> = ClientPrefs.keyBinds.get(optionShit[curSelected][1]);
+				var keysArray:Array<FlxKey> = controlMap.get(optionShit[curSelected][1]);
 				keysArray[curAlt ? 1 : 0] = keyPressed;
 
 				var opposite:Int = (curAlt ? 0 : 1);
 				if(keysArray[opposite] == keysArray[1 - opposite]) {
 					keysArray[opposite] = NONE;
 				}
-				ClientPrefs.keyBinds.set(optionShit[curSelected][1], keysArray);
+				controlMap.set(optionShit[curSelected][1], keysArray);
 
 				reloadKeys();
 				FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -623,7 +631,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 		}
 		return num;
 	}
-
+	
 	function changeSelection(change:Int = 0) {
 		do {
 			curSelected += change;
@@ -702,7 +710,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 	}
 
 	private function addBindTexts(optionText:Alphabet, num:Int) {
-		var keys:Array<Dynamic> = ClientPrefs.keyBinds.get(optionShit[num][1]);
+		var keys:Array<Dynamic> = controlMap.get(optionShit[num][1]);
 		var text1 = new AttachedText(InputFormatter.getKeyName(keys[0]), 400, -55);
 		text1.setPosition(optionText.x + 400, optionText.y - 55);
 		text1.sprTracker = optionText;
@@ -729,8 +737,6 @@ class ControlsSubstate extends MusicBeatSubstate {
 			grpInputsAlt.remove(item);
 			item.destroy();
 		}
-
-		//trace('Reloaded keys: ' + ClientPrefs.keyBinds);
 
 		for (i in 0...grpOptions.length) {
 			if(!unselectableCheck(i, true)) {

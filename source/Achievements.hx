@@ -21,7 +21,7 @@ class Achievements {
 		["[[HIPERLINK BLOCKED]]",			"Ache a cutscene secreta dentro do game.",				'week7_nomiss',			 true],
 		["Isso foi um Funkin' Disastre!",	"Acerte menos que 20% da musica.",	'ur_bad',				false],
 		["Perfecionista",				"tenha 100% em uma musica, confio em ti.",			'ur_good',				false],
-		["Roadkill Enthusiast",			"Watch the Henchmen die over 100 times.",			'roadkill_enthusiast',	false],
+		["Naaaaaaaao, pobre Carlos...",			"Veja Carlos morrer... 100 vezes... SEU MONSTRO.",			'roadkill_enthusiast',	false],
 		["Cantando, mas tipo MUITO...?",		"Segure uma nota por 20 segundos",					'oversinging',			false],
 		["Hiperativo",					"Termine uma musica sem voltar para a animacao padrao.",				'hype',					false],
 		["Só nós dois",			"Termine uma musica com apenas duas teclas.",			'two_keys',				false],

@@ -21,17 +21,19 @@ class GambiarraState extends MusicBeatState
 	
 	var target:FlxState;
 	var stopMusic = false;
+	var directory:String;
 	var callbacks:MultiCallback;
 	
 	var logo:FlxSprite;
 	var gfDance:FlxSprite;
 	var danceLeft = false;
 	
-	function new(target:FlxState, stopMusic:Bool)
+	function new(target:FlxState, stopMusic:Bool, directory:String)
 	{
 		super();
 		this.target = target;
 		this.stopMusic = stopMusic;
+		this.directory = directory;
 	}
 
 	var loadBar:FlxSprite;
@@ -64,15 +66,16 @@ class GambiarraState extends MusicBeatState
 			{
 				callbacks = new MultiCallback(onLoad);
 				var introComplete = callbacks.add("introComplete");
-				checkLoadSong(getSongPath());
-				if (PlayState.SONG.needsVoices)
-					checkLoadSong(getVocalPath());
-				checkLibrary("shared");
-				if (PlayState.storyWeek > 0)
-					checkLibrary("week" + PlayState.storyWeek);
-				else
-					checkLibrary("tutorial");
-				
+				if (PlayState.SONG != null) {
+					checkLoadSong(getSongPath());
+					if (PlayState.SONG.needsVoices)
+						checkLoadSong(getVocalPath());
+				}
+				checkLibrary("shared"); //Isso não fazia o menor sentido true da true
+				if(directory != null && directory.length > 0 && directory != 'shared') {
+					checkLibrary(directory);
+				}
+
 				var fadeTime = 0.5;
 				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
@@ -126,60 +129,62 @@ class GambiarraState extends MusicBeatState
 	{
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-		if(art !=null){
-		art.destroy(); //Oh nao, estou destruindo a arte
-		art = null;
-		}
+		art.kill(); //Oh nao, estou destruindo a arte
 		MusicBeatState.switchState(target);
 	}
 	
 	static function getSongPath()
-	{
-		return Paths.inst(PlayState.SONG.song);
-	}
+		{
+			return Paths.inst(PlayState.SONG.song);
+		}
+		
+		static function getVocalPath()
+		{
+			return Paths.voices(PlayState.SONG.song);
+		}
+		
+		inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
+		{
+			MusicBeatState.switchState(getNextState(target, stopMusic));
+		}
+		
+		static function getNextState(target:FlxState, stopMusic = false):FlxState
+		{
+			var directory:String = 'shared';
+			var weekDir:String = StageData.forceNextDirectory;
+			StageData.forceNextDirectory = null;
 	
-	static function getVocalPath()
-	{
-		return Paths.voices(PlayState.SONG.song);
-	}
+			if(weekDir != null && weekDir.length > 0 && weekDir != '') directory = weekDir;
 	
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
-	{
-		MusicBeatState.switchState(getNextState(target, stopMusic));
-	}
-	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState
-	{
-		Paths.setCurrentLevel("week" + PlayState.storyWeek);
+			Paths.setCurrentLevel(directory);
+			//trace('Setting asset folder to ' + directory);
 
+			//#if NO_PRELOAD_ALL
+			var loaded:Bool = false;
+			if (PlayState.SONG != null) {
+				loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
+			}
+			
+			if (!loaded)
+				return new GambiarraState(target, stopMusic, directory);
+			//#end
+			if (stopMusic && FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+			
+			return target;
+		}
+		
 		//#if NO_PRELOAD_ALL
-		var loaded = isSoundLoaded(getSongPath())
-			&& (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath()))
-			&& isLibraryLoaded("shared");
+		static function isSoundLoaded(path:String):Bool
+		{
+			return Assets.cache.hasSound(path);
+		}
 		
-		if (!loaded)
-			return new GambiarraState(target, stopMusic);
-
+		static function isLibraryLoaded(library:String):Bool
+		{
+			return Assets.getLibrary(library) != null;
+		}
 		//#end
-		if (stopMusic && FlxG.sound.music != null)
-			FlxG.sound.music.stop();
-		
-		return target;
-	}
-	
-
-	//#if NO_PRELOAD_ALL
-	static function isSoundLoaded(path:String):Bool
-	{
-		return Assets.cache.hasSound(path);
-	}
-	
-	static function isLibraryLoaded(library:String):Bool
-	{
-		return Assets.getLibrary(library) != null;
-	}
-
-	//#end
 	
 	override function destroy()
 	{

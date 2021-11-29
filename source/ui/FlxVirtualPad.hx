@@ -12,12 +12,6 @@ import flash.display.BitmapData;
 import flixel.graphics.FlxGraphic;
 import openfl.utils.ByteArray;
 
-/**
- * A gamepad which contains 4 directional buttons and 4 action buttons.
- * It's easy to set the callbacks and to customize the layout.
- *
- * @author Ka Wing Chin
- */
 @:keep @:bitmap("assets/preload/images/virtual-input.png")
 class GraphicVirtualInput extends BitmapData {}
  
@@ -101,15 +95,15 @@ class FlxVirtualPad extends FlxSpriteGroup
 				actions.add(add(buttonA = createButton(FlxG.width - 44 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "a")));
 				actions.add(add(buttonB = createButton(FlxG.width - 86 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "b")));
 			case A_B_X:
-				actions.add(add(buttonX = createButton(FlxG.width - 44 * 3, FlxG.height - 85 * 3, 44 * 3, 45 * 3, "x")));					
 				actions.add(add(buttonA = createButton(FlxG.width - 44 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "a")));
-				actions.add(add(buttonB = createButton(FlxG.width - 86 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "b")));				
+				actions.add(add(buttonB = createButton(FlxG.width - 86 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "b")));
+				actions.add(add(buttonX = createButton(FlxG.width - 44 * 3, FlxG.height - 85 * 3, 44 * 3, 45 * 3, "x")));	
 			case A_B_X_Y:
 				actions.add(add(buttonY = createButton(FlxG.width - 86 * 3, FlxG.height - 85 * 3, 44 * 3, 45 * 3, "y")));
 				actions.add(add(buttonX = createButton(FlxG.width - 44 * 3, FlxG.height - 85 * 3, 44 * 3, 45 * 3, "x")));					
 				actions.add(add(buttonA = createButton(FlxG.width - 44 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "a")));
 				actions.add(add(buttonB = createButton(FlxG.width - 86 * 3, FlxG.height - 45 * 3, 44 * 3, 45 * 3, "b")));			
-			case NONE:
+			case NONE: // do nothing
 		}
 	}
 
@@ -164,24 +158,17 @@ class FlxVirtualPad extends FlxSpriteGroup
 
 	public static function getVirtualInputFrames():FlxAtlasFrames
 	{
-			#if !web
-			var bitmapData = new GraphicVirtualInput(0, 0);
-			#end
-
-			/*
-			#if html5 // dirty hack for openfl/openfl#682
-			Reflect.setProperty(bitmapData, "width", 399);
-			Reflect.setProperty(bitmapData, "height", 183);
-			#end
-			*/
-			
-			#if !web
-			var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmapData);
-			return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
-			#else
-			var graphic:FlxGraphic = FlxGraphic.fromAssetKey(Paths.image('virtual-input'));
-			return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
-			#end
+		#if !web
+		var bitmapData = new GraphicVirtualInput(0, 0);
+		#end
+		
+		#if !web
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bitmapData);
+		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
+		#else
+		var graphic:FlxGraphic = FlxGraphic.fromAssetKey(Paths.image('virtual-input'));
+		return FlxAtlasFrames.fromSpriteSheetPacker(graphic, Std.string(new VirtualInputData()));
+		#end
 	}
 }
 
@@ -200,6 +187,6 @@ enum FlxActionMode
 	NONE;
 	A;
 	A_B;
-	A_B_X;	
+	A_B_X;
 	A_B_X_Y;
 }

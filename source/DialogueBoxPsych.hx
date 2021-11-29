@@ -2,20 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.text.FlxTypeText;
-import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
-import flixel.input.FlxKeyManager;
-import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
-import flixel.FlxSubState;
 import haxe.Json;
-import haxe.format.JsonParser;
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
 import openfl.utils.Assets;
 
 using StringTools;
@@ -76,11 +65,15 @@ class DialogueCharacter extends FlxSprite
 		this.curCharacter = character;
 
 		reloadCharacterJson(character);
+		if (Assets.exists(Paths.image('dialogue/' + jsonFile.image), IMAGE))
+			{
 		frames = Paths.getSparrowAtlas('dialogue/' + jsonFile.image);
+		} else {frames = Paths.getSparrowAtlas('dialogue/' + character);}
 		reloadAnimations();
 	}
 
 	public function reloadCharacterJson(character:String) {
+		//sussy mark
 		var characterPath:String = 'images/dialogue/' + character + '.json';
 		var rawJson = null;
 		var path:String = Paths.getPreloadPath(characterPath);

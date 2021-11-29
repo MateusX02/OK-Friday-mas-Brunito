@@ -409,7 +409,7 @@ class DialogueCharacterEditorState extends MusicBeatState
 		updateTextBox();
 	}
 
-	private static var DEFAULT_TEXT:String = 'Lorem ipsum dolor sit amet';
+	private static var DEFAULT_TEXT:String = 'Tudo certo por aqui';
 	function reloadText() {
 		if(daText != null) {
 			daText.killTheTimer();
@@ -425,13 +425,17 @@ class DialogueCharacterEditorState extends MusicBeatState
 
 	function reloadCharacter() {
 		var charsArray:Array<DialogueCharacter> = [character, ghostLoop, ghostIdle];
+		if(Assets.exists(Paths.image('dialogue/' + character.jsonFile.image))){
 		for (char in charsArray) {
 			char.frames = Paths.getSparrowAtlas('dialogue/' + character.jsonFile.image);
 			char.jsonFile = character.jsonFile;
 			char.reloadAnimations();
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));
 			char.updateHitbox();
+			DEFAULT_TEXT = 'Tudo certo por aqui';
+			}
 		}
+		else{DEFAULT_TEXT = 'Não foi encontrado personagem com esse nome';}
 		character.x = DialogueBoxPsych.LEFT_CHAR_X;
 		character.y = DialogueBoxPsych.DEFAULT_CHAR_Y;
 

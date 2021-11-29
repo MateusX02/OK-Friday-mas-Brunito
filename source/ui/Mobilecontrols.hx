@@ -25,7 +25,7 @@ class Mobilecontrols extends FlxSpriteGroup
 
 		// load control mode num from Config.hx
 		mode = getModeFromNumber(config.getcontrolmode());
-		//trace(config.getcontrolmode());
+		trace(config.getcontrolmode());
 
 		switch (mode)
 		{

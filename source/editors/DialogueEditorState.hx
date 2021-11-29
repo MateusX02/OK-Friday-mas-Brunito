@@ -296,8 +296,8 @@ class DialogueEditorState extends MusicBeatState
 
 	override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
-			if(sender == characterInputText) {
-				if (Assets.exists(Paths.image('dialogue/' + sender), IMAGE)) {
+			if(sender == characterInputText ) {
+				if (Assets.exists(Paths.image('dialogue/' + characterInputText), IMAGE)) {
 				character.reloadCharacterJson(characterInputText.text);
 				reloadCharacter();
 				updateTextBox();
@@ -307,12 +307,11 @@ class DialogueEditorState extends MusicBeatState
 					if(character.jsonFile.animations.length > curAnim && character.jsonFile.animations[curAnim] != null) {
 						character.playAnim(character.jsonFile.animations[curAnim].anim, daText.finishedText);
 						animText.text = 'Animacao: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Aperte cima/baixo para trocar a expressao';
-					}} else {
+						characterAnimSpeed();
+						dialogueFile.dialogue[curSelected].portrait = characterInputText.text;
+					}}} else {
 						animText.text = 'Sem personagens por enquanto';
 					}
-					characterAnimSpeed();
-				}
-				dialogueFile.dialogue[curSelected].portrait = characterInputText.text;
 			} else if(sender == lineInputText) {
 				reloadText(0);
 				dialogueFile.dialogue[curSelected].text = lineInputText.text;
