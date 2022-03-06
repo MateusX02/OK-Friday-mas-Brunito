@@ -813,7 +813,7 @@ class CharacterEditorState extends MusicBeatState
 	function reloadCharacterDropDown() {
 		var charsLoaded:Map<String, Bool> = new Map();
 
-		#if windows
+		#if awindows
 		characterList = [];
 		var directories:Array<String> = [Paths.mods('characters/'), Paths.getPreloadPath('characters/')];
 		for (i in 0...directories.length) {

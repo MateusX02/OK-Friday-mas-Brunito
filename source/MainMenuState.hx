@@ -25,14 +25,14 @@ import Discord.DiscordClient;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = '0.4.2'; //This is also used for Discord RPC
+	public static var psychEngineVersion:String = '0.1.5'; //This is also used for Discord RPC
 	public static var curSelected:Int = 7;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
 	
-	var optionShit:Array<String> = ['story_mode', 'freeplay', #if ACHIEVEMENTS_ALLOWED 'awards', #end 'credits', #if desktop 'donate', #end 'options'];
+	var optionShit:Array<String> = ['story_mode', #if ACHIEVEMENTS_ALLOWED 'awards', #end 'credits', 'options'];
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
@@ -56,9 +56,12 @@ class MainMenuState extends MusicBeatState
 
 	override function create()
 	{
+
+		Main.dumpCache();
+		
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("No menu principal", null);
 		#end
 		camGame = new FlxCamera();
 		camAchievement = new FlxCamera();
@@ -290,7 +293,7 @@ class MainMenuState extends MusicBeatState
 								switch (daChoice)
 								{
 									case 'story_mode':
-										MusicBeatState.switchState(new StoryMenuState());
+										MusicBeatState.switchState(new PreFreeplayState());
 									case 'freeplay':
 										MusicBeatState.switchState(new FreeplayState());
 									case 'awards':
@@ -305,11 +308,12 @@ class MainMenuState extends MusicBeatState
 					});
 				}
 			}
+			 #if mobile 
 			else if (FlxG.android.justReleased.BACK)
 			{
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
-
+			#end
 		super.update(elapsed);
 
 		menuItems.forEach(function(spr:FlxSprite)

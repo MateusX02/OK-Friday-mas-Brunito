@@ -83,9 +83,10 @@ class ChartingState extends MusicBeatState
 		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
 		['Opponent Anim', "Value 1: Character to change (dad, gf)\nValue 2: Camera position (1 = normal, 2 = gf)"],
 		['Super Fade', "Value 1: Super Idol opacity"],
+		['Adicionar Imagens', "Coloca Uma Imagem.\nValue 1: Nome Da Musica\nValue 2: Nome do arquivo"],
 		['Super Flash', "Value 1: Flash duration"],
 		['Zoom Amount', "Value 1: Changes the \"defaultCamZoom\""]
-	];
+		];
 
 	var _file:FileReference;
 
@@ -152,7 +153,7 @@ class ChartingState extends MusicBeatState
 	var zoomTxt:FlxText;
 	var curZoom:Int = 1;
 
-	#if !android
+	#if !html5
 	var zoomList:Array<Float> = [
 		0.5,
 		1,
@@ -184,13 +185,13 @@ class ChartingState extends MusicBeatState
 
 	override function create()
 	{
-		#if MODS_ALLOWED
-		Paths.destroyLoadedImages();
-		#end
+
+		Main.dumpCache();
+ 
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Chart Editor", StringTools.replace(PlayState.SONG.song, '-', ' '));
+		DiscordClient.changePresence("Chartando ", StringTools.replace(FreeplayState.infoextended, '-', ' '));
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -354,6 +355,9 @@ class ChartingState extends MusicBeatState
         key_teste.alpha = 0.75;
         add(key_teste);
 
+		#if mobileC
+		addVirtualPad(FULL, A);
+		#end
 		key_jogar = new FlxUIButton(60, (key_teste.y + key_teste.height + 25), "+");
         key_jogar.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		key_jogar.resize(42,50);
@@ -368,7 +372,6 @@ class ChartingState extends MusicBeatState
 
 		_pad = new FlxVirtualPad(FULL, NONE);
     	_pad.alpha = 0.75;
-    	this.add(_pad);
 
 		super.create();
 	}
@@ -383,7 +386,7 @@ class ChartingState extends MusicBeatState
 	function addSongUI():Void
 	{
 		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
-		UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		UI_songTitle.focusGained = () -> FlxG.stage.window.textInputEnabled = true;		
 		blockPressWhileTypingOn.push(UI_songTitle);
 		
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
@@ -423,11 +426,7 @@ class ChartingState extends MusicBeatState
 		{
 			var songName:String = Paths.formatToSongPath(_song.song);
 			var file:String = Paths.json(songName + '/events');
-			#if desktop
-			if (#if MODS_ALLOWED FileSystem.exists(Paths.modsJson(songName + '/events')) || #end FileSystem.exists(file))
-			#else
 			if (OpenFlAssets.exists(file))
-			#end
 			{
 				clearEvents();
 				var events:SwagSong = Song.loadFromJson('events', songName);
@@ -476,35 +475,13 @@ class ChartingState extends MusicBeatState
 		stepperSpeed.value = _song.speed;
 		stepperSpeed.name = 'song_speed';
 
-		#if !android
-		var directories:Array<String> = [Paths.mods('characters/'), Paths.mods(Paths.currentModDirectory + '/characters/'), Paths.getPreloadPath('characters/')];
-		#else
 		var directories:Array<String> = [Paths.getPreloadPath('characters/')];
-		#end
 
 		var tempMap:Map<String, Bool> = new Map<String, Bool>();
 		var characters:Array<String> = CoolUtil.coolTextFile(Paths.txt('characterList'));
 		for (i in 0...characters.length) {
 			tempMap.set(characters[i], true);
 		}
-
-		#if android
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
-						var charToCheck:String = file.substr(0, file.length - 5);
-						if(!charToCheck.endsWith('-dead') && !tempMap.exists(charToCheck)) {
-							tempMap.set(charToCheck, true);
-							characters.push(charToCheck);
-						}
-					}
-				}
-			}
-		}
-		#end
 
 		var player1DropDown = new FlxUIDropDownMenuCustom(10, stepperSpeed.y + 45, FlxUIDropDownMenuCustom.makeStrIdLabelArray(characters, true), function(character:String)
 		{
@@ -530,11 +507,7 @@ class ChartingState extends MusicBeatState
 		player2DropDown.selectedLabel = _song.player2;
 		blockPressWhileScrolling.push(player2DropDown);
 
-		#if !android
-		var directories:Array<String> = [Paths.mods('stages/'), Paths.mods(Paths.currentModDirectory + '/stages/'), Paths.getPreloadPath('stages/')];
-		#else
 		var directories:Array<String> = [Paths.getPreloadPath('stages/')];
-		#end
 
 		tempMap.clear();
 		var stageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('stageList'));
@@ -546,23 +519,6 @@ class ChartingState extends MusicBeatState
 			}
 			tempMap.set(stageToCheck, true);
 		}
-		#if android
-		for (i in 0...directories.length) {
-			var directory:String = directories[i];
-			if(FileSystem.exists(directory)) {
-				for (file in FileSystem.readDirectory(directory)) {
-					var path = haxe.io.Path.join([directory, file]);
-					if (!FileSystem.isDirectory(path) && file.endsWith('.json')) {
-						var stageToCheck:String = file.substr(0, file.length - 5);
-						if(!tempMap.exists(stageToCheck)) {
-							tempMap.set(stageToCheck, true);
-							stages.push(stageToCheck);
-						}
-					}
-				}
-			}
-		}
-		#end
 
 		if(stages.length < 1) stages.push('stage');
 
@@ -576,11 +532,11 @@ class ChartingState extends MusicBeatState
 		var skin = PlayState.SONG.arrowSkin;
 		if(skin == null) skin = '';
 		noteSkinInputText = new FlxUIInputText(player2DropDown.x, player2DropDown.y + 50, 150, skin, 8);
-		noteSkinInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		noteSkinInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;		
 		blockPressWhileTypingOn.push(noteSkinInputText);
 	
 		noteSplashesInputText = new FlxUIInputText(noteSkinInputText.x, noteSkinInputText.y + 35, 150, _song.splashSkin, 8);
-		noteSplashesInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		noteSplashesInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;		
 		blockPressWhileTypingOn.push(noteSplashesInputText);
 
 		var reloadNotesButton:FlxButton = new FlxButton(noteSplashesInputText.x + 5, noteSplashesInputText.y + 20, 'Change Notes', function() {
@@ -770,7 +726,7 @@ class ChartingState extends MusicBeatState
 		stepperSusLength.name = 'note_susLength';
 
 		strumTimeInputText = new FlxUIInputText(10, 65, 180, "0");
-		strumTimeInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+		strumTimeInputText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;		
 		tab_group_note.add(strumTimeInputText);
 		blockPressWhileTypingOn.push(strumTimeInputText);
 
@@ -783,17 +739,19 @@ class ChartingState extends MusicBeatState
 			key++;
 		}
 
+
+		//Importante
 		#if LUA_ALLOWED
-		var directories:Array<String> = [Paths.mods('custom_notetypes/'), Paths.mods(Paths.currentModDirectory + '/custom_notetypes/')];
+		var directories:Array<String> = [Paths.getPreloadPath('custom_notetypes/'), Paths.getPreloadPath('/custom_notetypes/')];
 		for (i in 0...directories.length) {
 			var directory:String =  directories[i];
-			if(FileSystem.exists(directory)) {
+			if(OpenFlAssets.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file.endsWith('.lua')) {
 						var fileToCheck:String = file.substr(0, file.length - 4);
 						if(!noteTypeMap.exists(fileToCheck)) {
-							displayNameList.push(fileToCheck);
+							displayNameList.push(Asset2File.getPath(fileToCheck));
 							noteTypeMap.set(fileToCheck, key);
 							noteTypeIntMap.set(key, fileToCheck);
 							key++;
@@ -835,12 +793,12 @@ class ChartingState extends MusicBeatState
 		var tab_group_event = new FlxUI(null, UI_box);
 		tab_group_event.name = 'Events';
 
-		#if LUA_ALLOWED
+				#if LUA_ALLOWED
 		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
-		var directories:Array<String> = [Paths.mods('custom_events/'), Paths.mods(Paths.currentModDirectory + '/custom_events/')];
+		var directories:Array<String> = [Paths.getPreloadPath('custom_events/'), Paths.getPreloadPath('custom_events/')];
 		for (i in 0...directories.length) {
 			var directory:String =  directories[i];
-			if(FileSystem.exists(directory)) {
+			if(OpenFlAssets.exists(directory)) {
 				for (file in FileSystem.readDirectory(directory)) {
 					var path = haxe.io.Path.join([directory, file]);
 					if (!FileSystem.isDirectory(path) && file != 'readme.txt' && file.endsWith('.txt')) {
@@ -1289,12 +1247,12 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				LoadingState.loadAndSwitchState(new editors.EditorPlayState(sectionStartTime()));
 			}
-			#if android
+						#if android
 			var androidback = FlxG.android.justReleased.BACK;
 			#else
 			var androidback = false;
 			#end
-			if (FlxG.keys.justPressed.ENTER || androidback)
+			if (FlxG.keys.justPressed.ENTER || androidback #if mobileC || _virtualpad.buttonA.justPressed #end)
 			{
 				autosaveSong();
 				FlxG.mouse.visible = false;
@@ -1364,7 +1322,7 @@ class ChartingState extends MusicBeatState
 
 			if (FlxG.keys.justPressed.R)
 			{
-				if (FlxG.keys.pressed.SHIFT)
+				if (FlxG.keys.justPressed.SPACE || key_space.justPressed)
 					resetSection(true);
 				else
 					resetSection();
@@ -1380,7 +1338,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 
-			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S || _pad.buttonUp.pressed || _pad.buttonDown.pressed)
+			if (FlxG.keys.pressed.W || FlxG.keys.pressed.S #if mobileC || _virtualpad.buttonUp.pressed || _virtualpad.buttonDown.pressed #end)
 			{
 				FlxG.sound.music.pause();
 
@@ -1390,7 +1348,7 @@ class ChartingState extends MusicBeatState
 
 				var daTime:Float = 700 * FlxG.elapsed * holdingShift;
 
-				if (FlxG.keys.pressed.W || _pad.buttonUp.pressed)
+				if (FlxG.keys.pressed.W #if mobileC || _virtualpad.buttonUp.pressed #end)
 				{
 					FlxG.sound.music.time -= daTime;
 				}
@@ -1407,9 +1365,9 @@ class ChartingState extends MusicBeatState
 			if (FlxG.keys.pressed.SHIFT)
 				shiftThing = 4;
 
-			if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D || _pad.buttonRight.justPressed)
+			if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D #if mobileC || _virtualpad.buttonRight.justPressed #end)
 				changeSection(curSection + shiftThing);
-			if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A || _pad.buttonLeft.justPressed) {
+			if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A #if mobileC || _virtualpad.buttonLeft.justPressed #end) {
 				if(curSection <= 0) {
 					changeSection(_song.notes.length-1);
 				} else {
@@ -1499,35 +1457,21 @@ class ChartingState extends MusicBeatState
 			audioBuffers[0].dispose();
 		}
 		audioBuffers[0] = null;
-		#if !android
-		if(FileSystem.exists(Paths.modFolders('songs/' + currentSongName + '/Inst.ogg'))) {
-			audioBuffers[0] = AudioBuffer.fromFile(Paths.modFolders('songs/' + currentSongName + '/Inst.ogg'));
-			//trace('Custom vocals found');
+		var leVocals:Dynamic = Paths.inst(currentSongName);
+		if (!Std.isOfType(leVocals, Sound) && OpenFlAssets.exists(leVocals)) { //Vanilla inst
+			audioBuffers[0] = AudioBuffer.fromFile('./' + leVocals.substr(6));
+			//trace('Inst found');
 		}
-		else { #end
-			var leVocals:Dynamic = Paths.inst(currentSongName);
-			if (!Std.isOfType(leVocals, Sound) && OpenFlAssets.exists(leVocals)) { //Vanilla inst
-				audioBuffers[0] = AudioBuffer.fromFile('./' + leVocals.substr(6));
-				//trace('Inst found');
-			}
 
 		if(audioBuffers[1] != null) {
 			audioBuffers[1].dispose();
 		}
 		audioBuffers[1] = null;
-		#if !android
-		if(FileSystem.exists(Paths.modFolders('songs/' + currentSongName + '/Voices.ogg'))) {
-			audioBuffers[1] = AudioBuffer.fromFile(Paths.modFolders('songs/' + currentSongName + '/Voices.ogg'));
-			//trace('Custom vocals found');
-		} else { #end
-			var leVocals:Dynamic = Paths.voices(currentSongName);
-			if (!Std.isOfType(leVocals, Sound) && OpenFlAssets.exists(leVocals)) { //Vanilla voices
-				audioBuffers[1] = AudioBuffer.fromFile('./' + leVocals.substr(6));
-				//trace('Voices found, LETS FUCKING GOOOO');
-			}
-		#if !android
+		var leVocals:Dynamic = Paths.voices(currentSongName);
+		if (!Std.isOfType(leVocals, Sound) && OpenFlAssets.exists(leVocals)) { //Vanilla voices
+			audioBuffers[1] = AudioBuffer.fromFile('./' + leVocals.substr(6));
+			//trace('Voices found, LETS FUCKING GOOOO');
 		}
-		#end
 	}
 
 	function reloadGridLayer() {
@@ -2126,7 +2070,7 @@ class ChartingState extends MusicBeatState
 		};
 
 		var data:String = Json.stringify(json, "\t");
-
+		
 		openfl.system.System.setClipboard(data.trim());
 
 		if ((data != null) && (data.length > 0))
@@ -2187,8 +2131,9 @@ class ChartingState extends MusicBeatState
 
 		var data:String = Json.stringify(json, "\t");
 
+		#if android
 		openfl.system.System.setClipboard(data.trim());
-
+		#end
 		if ((data != null) && (data.length > 0))
 		{
 			_file = new FileReference();

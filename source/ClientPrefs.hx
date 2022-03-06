@@ -16,7 +16,7 @@ class ClientPrefs {
 	public static var lowQuality:Bool = false;
 	public static var framerate:Int = 60;
 	public static var cursing:Bool = true;
-	public static var violence:Bool = false;
+	public static var hitSounds:Bool = false;
 	public static var camZooms:Bool = true;
 	public static var hideHud:Bool = false;
 	public static var noteOffset:Int = 0;
@@ -70,7 +70,7 @@ class ClientPrefs {
 		FlxG.save.data.lowQuality = lowQuality;
 		FlxG.save.data.framerate = framerate;
 		//FlxG.save.data.cursing = cursing;
-		FlxG.save.data.violence = violence;
+		FlxG.save.data.hitSounds = hitSounds;
 		FlxG.save.data.speed = speed;
 		FlxG.save.data.scroll = scroll;
 		FlxG.save.data.noteSize = noteSize;
@@ -160,8 +160,8 @@ class ClientPrefs {
 		/*if(FlxG.save.data.cursing != null) {
 			cursing = FlxG.save.data.cursing;
 		}*/
-		if(FlxG.save.data.violence != null) {
-			violence = FlxG.save.data.violence;
+		if(FlxG.save.data.hitSounds != null) {
+			hitSounds = FlxG.save.data.hitSounds;
 		}
 		if(FlxG.save.data.camZooms != null) {
 			camZooms = FlxG.save.data.camZooms;

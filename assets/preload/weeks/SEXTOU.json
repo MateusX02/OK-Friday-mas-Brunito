@@ -1,6 +1,6 @@
 {
 	"songs": [
-		["Tutorial", "gf", [165, 0, 77], "Tutorial"]
+		["Tutorial", "gf", [165, 0, 77], "Não interessa pra você palhaço - Melhor feature da BS Engine, falo memo"]
 	],
 
 	"weekCharacters": [
@@ -8,7 +8,7 @@
 		"bf",
 		"gf"
 	],
-	"weekBackground": "stage",
+	"weekBackground": "week0",
 
 	"storyName": "",
 	"weekBefore": "tutorial",

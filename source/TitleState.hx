@@ -1,5 +1,6 @@
 package;
 
+import lime.app.Application;
 #if desktop
 import Discord.DiscordClient;
 import sys.thread.Thread;
@@ -323,16 +324,6 @@ class TitleState extends MusicBeatState
 					} else { //haha duvido voce adivinhar o motivo de eu ter feito isso kek
 						MusicBeatState.switchState(new MainMenuState());
 					}
-					if(gfDance != null && logoBl != null && logoSpr != null && titleText != null) {
-						gfDance.destroy();
-						logoBl.destroy();
-						logoSpr.destroy();
-						titleText.destroy();
-					}
-					gfDance = null;
-					logoBl = null;
-					logoSpr = null;
-					titleText = null;
 					closedState = true;
 				});
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);

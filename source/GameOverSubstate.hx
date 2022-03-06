@@ -55,8 +55,9 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		bf.playAnim('firstDeath');
 
+		#if mobile
 		addVirtualPad(NONE, A_B);
-
+		#end
 		var exclude:Array<Int> = [];
 
 		camFollowPos = new FlxObject(0, 0, 1, 1);

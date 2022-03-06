@@ -8,15 +8,15 @@ import flixel.math.FlxPoint;
 class Config {
     var save:FlxSave;
 
-    public function new() 
+    public function new()
     {
         save = new FlxSave();
-    	save.bind("saveconrtol");
+	save.bind("saveconrtol");
     }
 
     public function setdownscroll(?value:Bool):Bool {
 		if (save.data.isdownscroll == null) save.data.isdownscroll = false;
-		
+
 		save.data.isdownscroll = !save.data.isdownscroll;
 		save.flush();
         return save.data.isdownscroll;
@@ -75,13 +75,13 @@ class Config {
 			buttons.x = save.data.buttons[tempCount].x;
 			buttons.y = save.data.buttons[tempCount].y;
 			tempCount++;
-		}	
+		}
         return _pad;
 	}
 
 	public function setFrameRate(fps:Int = 60) {
 		if (fps < 10) return;
-		
+
 		FlxG.stage.frameRate = fps;
 		save.data.framerate = fps;
 		save.flush();

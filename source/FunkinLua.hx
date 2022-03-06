@@ -32,9 +32,9 @@ import Discord;
 using StringTools;
 
 class FunkinLua {
-	public static var Function_Stop = 1;
-	public static var Function_Continue = 0;
-
+    public static var Function_Stop = "Function_Stop";
+	public static var Function_Continue = "Function_Continue";
+   
 	#if LUA_ALLOWED
 	public var lua:State = null;
 	#end
@@ -379,7 +379,7 @@ class FunkinLua {
 		});
 
 		//Tween shit, but for strums
-		Lua_helper.add_callback(lua, "noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
+		/*Lua_helper.add_callback(lua, "noteTweenX", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
 			cancelTween(tag);
 			if(note < 0) note = 0;
 			var testicle:StrumNote = lePlayState.strumLineNotes.members[note % lePlayState.strumLineNotes.length];
@@ -420,7 +420,7 @@ class FunkinLua {
 					}
 				}));
 			}
-		});
+		}); 
 		Lua_helper.add_callback(lua, "noteTweenAlpha", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
 			cancelTween(tag);
 			if(note < 0) note = 0;
@@ -434,7 +434,7 @@ class FunkinLua {
 					}
 				}));
 			}
-		});
+		}); */
 
 		Lua_helper.add_callback(lua, "cancelTween", function(tag:String) {
 			cancelTween(tag);
@@ -646,7 +646,7 @@ class FunkinLua {
 			var cam:FlxCamera = cameraFromString(camera);
 			return FlxG.mouse.getScreenPosition(cam).y;
 		});
-		Lua_helper.add_callback(lua, "characterPlayAnim", function(character:String, anim:String, ?forced:Bool = false) {
+		/*Lua_helper.add_callback(lua, "characterPlayAnim", function(character:String, anim:String, ?forced:Bool = false) {
 			switch(character.toLowerCase()) {
 				case 'dad':
 					if(lePlayState.dad.animOffsets.exists(anim))
@@ -665,7 +665,7 @@ class FunkinLua {
 				case 'gf' | 'girlfriend': lePlayState.gf.dance();
 				default: lePlayState.boyfriend.dance();
 			}
-		});
+		}); */
 
 		Lua_helper.add_callback(lua, "makeLuaSprite", function(tag:String, image:String, x:Float, y:Float) {
 			tag = tag.replace('.', '');

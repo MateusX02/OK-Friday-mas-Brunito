@@ -44,7 +44,7 @@ class FlashingStateDois extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if(!leftState) {
-			var back:Bool = FlxG.android.justReleased.BACK;
+			var back:Bool = #if mobile FlxG.android.justReleased.BACK #else FlxG.keys.justPressed.ENTER #end;
 			if (controls.ACCEPT) {
 				leftState = true;
 				FlxTransitionableState.skipNextTransIn = true;
@@ -60,7 +60,7 @@ class FlashingStateDois extends MusicBeatState
 					});
 				}
 			}
-			if (FlxG.android.justReleased.BACK) {
+			if (#if mobile FlxG.android.justReleased.BACK #else FlxG.keys.justPressed.ENTER #end) {
 				leftState = true;
 				FlxTransitionableState.skipNextTransIn = true;
 				FlxTransitionableState.skipNextTransOut = true;

@@ -102,8 +102,9 @@ class EditorPlayState extends MusicBeatState
 		generateSong(PlayState.SONG.song);
 		#if LUA_ALLOWED
 		for (notetype in noteTypeMap.keys()) {
-			var luaToLoad:String = Paths.modFolders('custom_notetypes/' + notetype + '.lua');
-			if(sys.FileSystem.exists(luaToLoad)) {
+			var luaToLoad:String = 'custom_notetypes/' + notetype + '.lua';
+		    luaToLoad = Paths.getPreloadPath(luaToLoad);			
+			if(openfl.utils.Assets.exists(luaToLoad)) {
 				var lua:editors.EditorLua = new editors.EditorLua(luaToLoad);
 				new FlxTimer().start(0.1, function (tmr:FlxTimer) {
 					lua.stop();
@@ -312,7 +313,7 @@ class EditorPlayState extends MusicBeatState
 	}
 
 	override function update(elapsed:Float) {
-		if (FlxG.keys.justPressed.ESCAPE || FlxG.android.justReleased.BACK)
+		if (FlxG.keys.justPressed.ESCAPE #if mobile || FlxG.android.justReleased.BACK #end)
 		{
 			FlxG.sound.music.pause();
 			vocals.pause();

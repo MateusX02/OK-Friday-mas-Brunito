@@ -559,7 +559,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 				changeAlt();
 			}
 
-			if (controls.BACK || FlxG.android.justReleased.BACK) {
+			if (controls.BACK #if mobile ||  FlxG.android.justReleased.BACK #end) {
 				ClientPrefs.keyBinds = controlMap.copy();
 				ClientPrefs.reloadControls();
 				grpOptions.forEachAlive(function(spr:Alphabet) {
@@ -924,8 +924,9 @@ class PreferencesSubstate extends MusicBeatSubstate
 		}
 
 		if (controls.BACK) {
+			#if mobile
 			remove(_virtualpad);
-
+			#end
 			grpOptions.forEachAlive(function(spr:Alphabet) {
 				spr.alpha = 0;
 			});
@@ -996,7 +997,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 						ClientPrefs.dadia = !ClientPrefs.dadia;
 
 					case 'Som de OSU':
-						ClientPrefs.violence = !ClientPrefs.violence;
+						ClientPrefs.hitSounds = !ClientPrefs.hitSounds;
 
 					case 'Swearing':
 						ClientPrefs.cursing = !ClientPrefs.cursing;
@@ -1072,7 +1073,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 						else if(ClientPrefs.noteOffset > 500) ClientPrefs.noteOffset = 500;
 					case 'Volume do osu':
 						ClientPrefs.osusom += addo;
-						if(ClientPrefs.violence) {
+						if(ClientPrefs.hitSounds) {
 						var hitsound:FlxSound = new FlxSound().loadEmbedded(Paths.sound('osu', 'shared'));
 						hitsound.volume = ClientPrefs.osusom;
 						hitsound.play();
@@ -1226,7 +1227,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 					case 'Swearing':
 						daValue = ClientPrefs.cursing;
 					case 'Som de OSU':
-						daValue = ClientPrefs.violence;
+						daValue = ClientPrefs.hitSounds;
 					case 'Efeitos de camera':
 						daValue = ClientPrefs.camZooms;
 					case 'Ocultar HUD':

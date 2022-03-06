@@ -16,7 +16,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
-import GambiarraState; //OU TU VAI OU TU VAI PACERO
 import LoadingState;
 import WeekData;
 
@@ -303,7 +302,10 @@ class StoryMenuState extends MusicBeatState
 			}
 			else // dando uso para esta parte do codigo
 			{
-				GambiarraState.loadAndSwitchState(new PlayState());
+				openSubState(new LoadingsState());
+				new FlxTimer().start(3.5, function(tmr:FlxTimer) {
+					LoadingState.loadAndSwitchState(new PlayState());
+				});
 			}
 			FreeplayState.destroyFreeplayVocals();
 		});

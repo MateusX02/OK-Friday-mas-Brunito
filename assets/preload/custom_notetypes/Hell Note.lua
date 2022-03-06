@@ -3,7 +3,7 @@ function onCreate()
 	for i = 0, getProperty('unspawnNotes.length')-1 do
 		--Check if the note is a Fire Note
 		if getPropertyFromGroup('unspawnNotes', i, 'noteType') == 'Hell Note' then
-			setPropertyFromGroup('unspawnNotes', i, 'texture', 'notes/placeholderEX'); --Change texture --Change note splash texture
+			setPropertyFromGroup('unspawnNotes', i, 'texture', 'nevada/notes/placeholderEX'); --Change texture --Change note splash texture
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashHue', 0);
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashSat', 0);
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashBrt', -100);

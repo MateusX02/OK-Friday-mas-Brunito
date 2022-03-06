@@ -2,7 +2,7 @@ function onCreate()
 	--Iterate over all notes
 	for i = 0, getProperty('unspawnNotes.length')-1 do
 		if getPropertyFromGroup('unspawnNotes', i, 'noteType') == 'Bullet_Note' then --Check if the note on the chart is a Bullet Note
-			setPropertyFromGroup('unspawnNotes', i, 'texture', 'notes/Bullet_Note'); --Change texture
+			setPropertyFromGroup('unspawnNotes', i, 'texture', 'nevada/notes/Bullet_Note'); --Change texture
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashHue', 0); --custom notesplash color, why not
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashSat', -20);
 			setPropertyFromGroup('unspawnNotes', i, 'noteSplashBrt', 1);
@@ -30,12 +30,16 @@ end
 
 function noteMiss(id, direction, noteType, isSustainNote)
 	if noteType == 'Bullet_Note' and difficulty == 2 then
-		setProperty('health', -1);
+		setProperty('health', getProperty('health')-0.5);
+		characterPlayAnim('dad', shootAnims[direction + 1], false);
 		playSound('hankshoot', 0.5);
+		cameraShake('camGame', 0.01, 0.2);
 	elseif noteType == 'Bullet_Note' and difficulty == 1 then
-		setProperty('health', getProperty('health')-0.8);
+		setProperty('health', getProperty('health')-0.5);
 		runTimer('bleed', 0.2, 20);
+		characterPlayAnim('dad', shootAnims[direction + 1], false);
 		playSound('hankded', 0.6);
+		cameraShake('camGame', 0.01, 0.2);
 		characterPlayAnim('boyfriend', 'hurt', true);
 	end
 end
