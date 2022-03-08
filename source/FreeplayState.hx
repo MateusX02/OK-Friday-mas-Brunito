@@ -326,7 +326,7 @@ class FreeplayState extends MusicBeatState
 
 			FlxG.camera.flash(bg.color, 1.0);
 			openSubState(new LoadingsState());
-			new FlxTimer().start(3.5, function(tmr:FlxTimer) {
+			new FlxTimer().start(5, function(tmr:FlxTimer) {
 				LoadingState.loadAndSwitchState(new PlayState());
 			});
 

@@ -47,6 +47,7 @@ class PreFreeplayState extends MusicBeatState
 
 	var leftArrow:FlxButton;
 	var rightArrow:FlxButton;
+	public static var leName:String;
 
 	override function create()
 	{
@@ -57,8 +58,8 @@ class PreFreeplayState extends MusicBeatState
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
 		persistentUpdate = persistentDraw = true;
 
-		txtWeekTitle = new FlxText(FlxG.width * 0.25, 50, 0, "", 48);
-		txtWeekTitle.setFormat(Paths.font("vcr.ttf"), 48, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		txtWeekTitle = new FlxText(FlxG.width * 0.7, 0, 0, "", 32);
+		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
 		txtWeekTitle.alpha = 0.7;
 
 		bgSprite = new FlxSprite(0, 0);
@@ -67,18 +68,18 @@ class PreFreeplayState extends MusicBeatState
 		//grpWeekText = new FlxTypedGroup<MenuItem>();
 	//	add(grpWeekText);
 
-		botaoAceitar = new FlxButton(FlxG.width - 150,	FlxG.height - 50, '');
+		botaoAceitar = new FlxButton(FlxG.width - 200,	FlxG.height - 100, '');
 		botaoAceitar.loadGraphic(Paths.image('aceitas'));
 		botaoAceitar.updateHitbox();
 		botaoAceitar.antialiasing = ClientPrefs.globalAntialiasing;
-		//botaoAceitar.setGraphicSize(Std.int(logoBl.width));
+		botaoAceitar.setGraphicSize(Std.int(botaoAceitar.width * 1.5));
 
 
-		botaoVoltar = new FlxButton(FlxG.width - 300,	FlxG.height - 50, '');
+		botaoVoltar = new FlxButton(FlxG.width - 425,	FlxG.height - 100, '');
 		botaoVoltar.loadGraphic(Paths.image('retornas'));
 		botaoVoltar.updateHitbox();
 		botaoVoltar.antialiasing = ClientPrefs.globalAntialiasing;
-		//botaoVoltaar.setGraphicSize(Std.int(logoBl.width));
+		botaoVoltar.setGraphicSize(Std.int(botaoVoltar.width * 1.5));
 
 
 
@@ -116,6 +117,9 @@ class PreFreeplayState extends MusicBeatState
 		add(bgSprite);
 		add(botaoVoltar);
 		add(botaoAceitar);
+
+		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
+		add(blackBarThingie);
 	//	add(grpWeekCharacters);
 		//add(machine);
 /*
@@ -206,13 +210,13 @@ class PreFreeplayState extends MusicBeatState
 				leftArrow.scale.set(1, 1);
 			}
 
-			if (controls.ACCEPT)
+			if (controls.ACCEPT || botaoAceitar.justPressed)
 			{
 				selectWeek();
 			}
 		}
 
-		if (controls.BACK && !movedBack && !selectedWeek)
+		if (controls.BACK || botaoVoltar.justPressed && !movedBack && !selectedWeek)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
@@ -273,10 +277,10 @@ class PreFreeplayState extends MusicBeatState
 		WeekData.setDirectoryFromWeek(leWeek);
 
 		eltextodaweek = leWeek.storyName;
-		var leName:String = leWeek.storyName;
+		leName = leWeek.storyName;
 		txtWeekTitle.text = leName.toUpperCase();
-		txtWeekTitle.x = (FlxG.width / 2) - 350; //Bem vindo a turma de matemática avançada
-		txtWeekTitle.y = 50;
+		txtWeekTitle.screenCenter(X); //Bem vindo a turma de matemática avançada
+		txtWeekTitle.y = 0;
 
 		var bullShit:Int = 0;
 
@@ -302,7 +306,7 @@ class PreFreeplayState extends MusicBeatState
 			} else {
 				bgSprite.loadGraphic('assets/images/menuBG.png'); 
 			}
-			bgSprite.setGraphicSize(FlxG.width);
+			bgSprite.setGraphicSize(Std.int(FlxG.width * 0.95));
 			bgSprite.screenCenter(XY);
 		}
 

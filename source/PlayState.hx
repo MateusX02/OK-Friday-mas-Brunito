@@ -131,6 +131,9 @@ class PlayState extends MusicBeatState
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
 
+	var bfcamX:Int = 0;
+	var bfcamY:Int = 0;
+
 	public var boyfriendGroup:FlxSpriteGroup;
 	public var dadGroup:FlxSpriteGroup;
 	public var gfGroup:FlxSpriteGroup;
@@ -252,6 +255,8 @@ class PlayState extends MusicBeatState
 	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
+
+	var cameramove:Bool = ClientPrefs.cenoptim;
 
 	// how big to stretch the pixel art assets
 	public static var daPixelZoom:Float = 6;
@@ -3807,6 +3812,25 @@ class PlayState extends MusicBeatState
 				notes.remove(note, true);
 				note.destroy();
 			}
+
+			switch (note.noteData)
+			{
+
+				case 2:
+					bfcamY = -15;
+					bfcamX = 0;
+				case 3:
+					bfcamX = 15;
+					bfcamY = 0;	
+				case 1:
+					bfcamY = 15;
+					bfcamX = 0;
+				case 0:
+					bfcamX = -15;
+					bfcamY = 0;
+			}
+
+			
 		}
 	}
 
@@ -4071,6 +4095,12 @@ class PlayState extends MusicBeatState
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null && !endingSong && !isCameraOnForcedPos)
 		{
 			moveCameraSection(Std.int(curStep / 16));
+
+			if (cameramove)
+				{
+					camFollow.x += bfcamX;
+					camFollow.y += bfcamY;
+				}
 		}
 		if (camZooming && FlxG.camera.zoom < 1.35 && ClientPrefs.camZooms && curBeat % 4 == 0)
 		{

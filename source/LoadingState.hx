@@ -25,6 +25,7 @@ class LoadingsState extends MusicBeatSubstate
 	public var instantAlpha:Bool = false;
     var letext:FlxText;
 	var art = new FlxSprite();
+	var txtWeekTitle:FlxText;
 	override function create()
 	{
 		
@@ -58,6 +59,18 @@ class LoadingsState extends MusicBeatSubstate
 		letext.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		letext.scrollFactor.set();
 		add(letext);
+
+		var blackBarThingie:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK);
+		blackBarThingie.y = -5;
+		add(blackBarThingie);
+
+		txtWeekTitle = new FlxText(0, 10, 0, "", 32);
+		txtWeekTitle.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, RIGHT);
+		txtWeekTitle.screenCenter(X);
+		txtWeekTitle.text = PreFreeplayState.leName;
+		txtWeekTitle.alpha = 0.7;
+		add(txtWeekTitle);
+
 		super.create();
 	}
 
