@@ -38,11 +38,11 @@ class PreFreeplayState extends MusicBeatState
 
 	private static var curWeek:Int = 0;
 
-	var machine:FlxSprite;
+	//var machine:FlxSprite;
 
 //	var grpWeekText:FlxTypedGroup<MenuItem>;
 
-	var logoBl:FlxButton;
+	//var logoBl:FlxButton;
 
 	var leftArrow:FlxButton;
 	var rightArrow:FlxButton;
@@ -86,21 +86,21 @@ class PreFreeplayState extends MusicBeatState
 		var charArray:Array<String> = WeekData.weeksLoaded.get(WeekData.weeksList[0]).weekCharacters;
 
 
-		machine = new FlxSprite(0).loadGraphic(Paths.image('ModboaMenu'));
+	/*	machine = new FlxSprite(0).loadGraphic(Paths.image('ModboaMenu'));
 		machine.scrollFactor.x = 0;
 		machine.scrollFactor.y = 0;
 		machine.setGraphicSize(FlxG.width);
 		machine.updateHitbox();
 		machine.screenCenter();
 		machine.visible = true;
-		machine.antialiasing = ClientPrefs.globalAntialiasing;
+		machine.antialiasing = ClientPrefs.globalAntialiasing; */
 		
 
 	//	add(bgYellow);
 		add(bgSprite);
 	//	add(grpWeekCharacters);
-		add(machine);
-
+		//add(machine);
+/*
 		logoBl = new FlxButton(50, 10, '');
 
 		logoBl.loadGraphic(Paths.image('logodeboa'));
@@ -111,7 +111,7 @@ class PreFreeplayState extends MusicBeatState
 		logoBl.setGraphicSize(Std.int(logoBl.width));
 		logoBl.y = 30;
 		logoBl.x = FlxG.width - logoBl.width - 50; //MATEMÁTICA AVANÇADA AGAIN
-		add(logoBl);
+		add(logoBl); */
 
 		leftArrow = new FlxButton(-600, 312, '');
 		leftArrow.loadGraphic(Paths.image("arrowLeft"));
@@ -153,9 +153,9 @@ class PreFreeplayState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 
-		if (logoBl.justPressed) {
-			selectWeek();
-		}
+		//if (logoBl.justPressed) {
+		//	selectWeek();
+		//}
 
 		#if desktop
 		DiscordClient.changePresence("Escolhendo uma semana ", null);

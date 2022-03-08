@@ -101,6 +101,14 @@ class PlayState extends MusicBeatState
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
 	#end
 
+	//Elmarco
+
+	var stagebg:BGSprite;
+	var city:BGSprite;
+	var bgphilly:BGSprite;
+	var stageFront:BGSprite;
+	var stageCurtains:BGSprite;
+
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
 	#if (haxe >= "4.0.0")
@@ -216,6 +224,8 @@ class PlayState extends MusicBeatState
 	var limoCorpseTwo:BGSprite;
 	var bgLimo:BGSprite;
 	var grpLimoParticles:FlxTypedGroup<BGSprite>;
+	var stagegroup:FlxTypedGroup<BGSprite>;
+	var citygroup:FlxTypedGroup<BGSprite>;
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
 	var fastCar:BGSprite;
 
@@ -258,6 +268,8 @@ class PlayState extends MusicBeatState
 	var detailsText:String = "";
 	var detailsPausedText:String = "";
 	#end
+
+	var bsEnginewatermark:FlxText;
 
 	#if mobileC
 	var mcontrols:Mobilecontrols; 
@@ -417,11 +429,9 @@ class PlayState extends MusicBeatState
 
 				var skyBG:BGSprite = new BGSprite('limoSunset', -120, -50, 0.1, 0.1);
 				add(skyBG);
-				remove(skyBG);
 
 				bgLimo = new BGSprite('bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true);
 				add(bgLimo);
-				remove(bgLimo);
 
 				grpLimoDancers = new FlxTypedGroup<BackgroundDancer>();
 				add(grpLimoDancers);
@@ -433,34 +443,39 @@ class PlayState extends MusicBeatState
 					grpLimoDancers.add(dancer);					
 				}
 
-				remove(grpLimoDancers);
-
-				limo = new BGSprite('limoDrive', -120, 550, 1, 1, ['Limo stage'], true);
+				limo = new BGSprite('limoDrive', 20, 550, 1, 1, ['Limo stage'], true);
 				add(limo);
-				remove(limo);
 
-				var city:BGSprite = new BGSprite('city', -10, 0, 0.3, 0.3);
+				//Elmarco
+
+				city = new BGSprite('city', -10, 0, 0.3, 0.3);
+				city.alpha = 1;
 				city.setGraphicSize(Std.int(city.width * 0.85));
 				city.updateHitbox();
+
 				add(city);
-				remove(city);
 
-				var bgphilly:BGSprite = new BGSprite('street', -100, 0, 0.1, 0.1);
+				bgphilly = new BGSprite('street', -100, 0, 0.1, 0.1);
+				bgphilly.alpha = 1;
 				add(bgphilly);
-				remove(bgphilly);
 
-				var bg:BGSprite = new BGSprite('stageback', -600, -200, 0.9, 0.9);
-				add(bg);
 
-				var stageFront:BGSprite = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
+				stagebg = new BGSprite('stageback', -600, -200, 0.9, 0.9);
+				stagebg.alpha = 1;
+				add(stagebg);
+
+				stageFront = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
+				stageFront.alpha = 1;
 				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 				stageFront.updateHitbox();
 				add(stageFront);
 
 
-				var stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
+				stageCurtains = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
+				stageCurtains.alpha = 1;
 				stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
 				stageCurtains.updateHitbox();
+
 				add(stageCurtains);
 
 			case 'spooky': //Week 2
@@ -875,7 +890,7 @@ class PlayState extends MusicBeatState
 			'songPercent', 0, 1);
 		timeBar.scrollFactor.set();
 		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
-		timeBar.numDivisions = 800; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
+		timeBar.numDivisions = 600; //How much lag this causes?? Should i tone it down to idk, 400 or 200?
 		timeBar.alpha = 0;
 		timeBar.visible = !ClientPrefs.hideTime;
 		add(timeBar);
@@ -974,6 +989,20 @@ class PlayState extends MusicBeatState
 		iconP2.visible = !ClientPrefs.hideHud;
 		add(iconP2);
 		reloadHealthBarColors();
+
+		bsEnginewatermark = new FlxText(4, healthBarBG.y
+			+ 50, 0,
+			FreeplayState.infoextended
+			+ " - "
+			+ CoolUtil.difficultyStuff[storyDifficulty][0]
+			+ " | BS Engine Mobile v 0.1.5",
+			16);
+		bsEnginewatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		bsEnginewatermark.scrollFactor.set();
+		add(bsEnginewatermark);
+
+		if (ClientPrefs.downScroll)
+			bsEnginewatermark.y = FlxG.height * 0.9 + 45;
 
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1392,7 +1421,7 @@ class PlayState extends MusicBeatState
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
-				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].x);
+				setOnLuas('defaultPlayerStrumX' + i, playerStrums.members[i].y);
 				setOnLuas('defaultPlayerStrumY' + i, playerStrums.members[i].y);
 			}
 			for (i in 0...opponentStrums.length) {
@@ -2945,11 +2974,53 @@ class PlayState extends MusicBeatState
 			case 'Super Fade':
 				var fade:Int = Std.parseInt(value1);
 
-				blammedLightsBlackTween = FlxTween.tween(dad, {alpha: fade}, 1, {ease: FlxEase.quadInOut,
+				blammedLightsBlackTween = FlxTween.tween(dad, {alpha: fade}, 0.05, {ease: FlxEase.quadInOut,
 					onComplete: function(twn:FlxTween) {
 						blammedLightsBlackTween = null;
 					}
 				});
+
+			case 'ChangeBG':
+				var alturaBF:Int = Std.parseInt(value1);
+				var alturaDAD:Int = Std.parseInt(value2);
+
+				boyfriendGroup.x = alturaDAD + 770;
+				boyfriendGroup.y = alturaBF + 100;
+
+
+			case 'opaCidade':
+				var elemento:Int = Std.parseInt(value1);
+				var opaCidade:Int = Std.parseInt(value2);
+	
+				if (elemento == 1) {				
+					blammedLightsBlackTween = FlxTween.tween(stageCurtains, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
+						onComplete: function(twn:FlxTween) {
+							blammedLightsBlackTween = null;
+						}
+					});
+					blammedLightsBlackTween = FlxTween.tween(stagebg, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
+						onComplete: function(twn:FlxTween) {
+							blammedLightsBlackTween = null;
+						}
+					});
+					blammedLightsBlackTween = FlxTween.tween(stageFront, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
+						onComplete: function(twn:FlxTween) {
+							blammedLightsBlackTween = null;
+						}
+					});
+				} else if (elemento == 2) {
+					blammedLightsBlackTween = FlxTween.tween(city, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
+						onComplete: function(twn:FlxTween) {
+							blammedLightsBlackTween = null;
+						}
+					});
+					blammedLightsBlackTween = FlxTween.tween(bgphilly, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
+						onComplete: function(twn:FlxTween) {
+							blammedLightsBlackTween = null;
+						}
+					});
+				} 
+	
 
 			case 'Super Flash':
 				var flashValue:Int = Std.parseInt(value1);

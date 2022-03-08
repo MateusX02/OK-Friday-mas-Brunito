@@ -143,26 +143,27 @@ class EditorPlayState extends MusicBeatState
 		FlxG.mouse.visible = false;
 
 		#if mobileC
-		mcontrols = new Mobilecontrols();
-		switch (mcontrols.mode)
-		{
-			case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
-				controls.setVirtualPad(mcontrols._virtualPad, FULL, NONE);
-			case HITBOX:
-				controls.setHitBox(mcontrols._hitbox);
-			default:
-		}
-		trackedinputs = controls.trackedinputs;
-		controls.trackedinputs = [];
-		var camcontrol = new FlxCamera();
-		FlxG.cameras.add(camcontrol);
-		camcontrol.bgColor.alpha = 0;
-		mcontrols.cameras = [camcontrol];
+			mcontrols = new Mobilecontrols();
+			switch (mcontrols.mode)
+			{
+				case VIRTUALPAD_RIGHT | VIRTUALPAD_LEFT | VIRTUALPAD_CUSTOM:
+					controls.setVirtualPadNOTES(mcontrols._virtualPad, FULL, NONE);
+				case HITBOX:
+					controls.setHitBoxNOTES(mcontrols._hitbox);
+				default:
+			}
+			trackedinputsNOTES = controls.trackedinputsNOTES;
+			controls.trackedinputsNOTES = [];
 
-		mcontrols.visible = false;
+			var camcontrol = new FlxCamera();
+			FlxG.cameras.add(camcontrol);
+			camcontrol.bgColor.alpha = 0;
+			mcontrols.cameras = [camcontrol];
 
-		add(mcontrols);
-	#end
+			mcontrols.visible = false;
+
+			add(mcontrols);
+		#end
 
 		//sayGo();
 		super.create();

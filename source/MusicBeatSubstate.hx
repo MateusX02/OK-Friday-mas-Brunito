@@ -31,29 +31,23 @@ class MusicBeatSubstate extends FlxSubState
 	#if mobileC
 	var _virtualpad:FlxVirtualPad;
 
-	var trackedinputs:Array<FlxActionInput> = [];
+	var trackedinputsUI:Array<FlxActionInput> = [];
+	var trackedinputsNOTES:Array<FlxActionInput> = [];	
 
 	// adding virtualpad to state
 	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
 		_virtualpad = new FlxVirtualPad(DPad, Action);
 		_virtualpad.alpha = 0.75;
-		var padsubcam = new FlxCamera();
-		FlxG.cameras.add(padsubcam);
-		padsubcam.bgColor.alpha = 0;
-		_virtualpad.cameras = [padsubcam];
 		add(_virtualpad);
-		controls.setVirtualPad(_virtualpad, DPad, Action);
-		trackedinputs = controls.trackedinputs;
-		controls.trackedinputs = [];
-
-		#if android
-		controls.addAndroidBack();
-		#end
+		controls.setVirtualPadUI(_virtualpad, DPad, Action);
+		trackedinputsUI = controls.trackedinputsUI;
+		controls.trackedinputsUI = [];
 	}
 	
 	override function destroy() {
-		controls.removeFlxInput(trackedinputs);
-
+		controls.removeFlxInput(trackedinputsUI);
+		controls.removeFlxInput(trackedinputsNOTES);		
+		
 		super.destroy();
 	}
 	#else

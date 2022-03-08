@@ -85,7 +85,9 @@ class ChartingState extends MusicBeatState
 		['Super Fade', "Value 1: Super Idol opacity"],
 		['Adicionar Imagens', "Coloca Uma Imagem.\nValue 1: Nome Da Musica\nValue 2: Nome do arquivo"],
 		['Super Flash', "Value 1: Flash duration"],
-		['Zoom Amount', "Value 1: Changes the \"defaultCamZoom\""]
+		['Zoom Amount', "Value 1: Changes the \"defaultCamZoom\""],
+		['opaCidade', "Value1 = Seleciona o stage: 1 == stage; 2 == city \n value2 == opacidade"],
+		['ChangeBG', 'Value1: Muda a altura Y do BF \n Value2: Muda a altura Y de Painho']
 		];
 
 	var _file:FileReference;
@@ -191,7 +193,7 @@ class ChartingState extends MusicBeatState
 
 		#if desktop
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("Chartando ", StringTools.replace(FreeplayState.infoextended, '-', ' '));
+		DiscordClient.changePresence("Fazendo algo ilícito provavelmente... em: ", StringTools.replace(FreeplayState.infoextended, '-', ' '));
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

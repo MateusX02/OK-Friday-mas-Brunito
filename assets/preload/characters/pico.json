@@ -106,12 +106,12 @@
 		0,
 		300
 	],
-	"healthicon": "pico",
+	"healthicon": "gf",
 	"flip_x": true,
 	"healthbar_colors": [
-		183,
-		216,
-		85
+		165,
+		0,
+		77
 	],
 	"camera_position": [
 		0,
