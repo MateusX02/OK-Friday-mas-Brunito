@@ -106,8 +106,6 @@ class PlayState extends MusicBeatState
 	var stagebg:BGSprite;
 	var city:BGSprite;
 	var bgphilly:BGSprite;
-	var stageFront:BGSprite;
-	var stageCurtains:BGSprite;
 
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
@@ -418,17 +416,14 @@ class PlayState extends MusicBeatState
 					stageLight.updateHitbox();
 					stageLight.flipX = true;
 					add(stageLight);
-
-					var stageCurtains:BGSprite = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
-					stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-					stageCurtains.updateHitbox();
-					add(stageCurtains);
 				}
 
 				case 'brunito': //Week 1
 
 				var skyBG:BGSprite = new BGSprite('limoSunset', -120, -50, 0.1, 0.1);
 				add(skyBG);
+
+				dadGroup.alpha = 0;
 
 				bgLimo = new BGSprite('bgLimo', -150, 480, 0.4, 0.4, ['background limo pink'], true);
 				add(bgLimo);
@@ -463,20 +458,6 @@ class PlayState extends MusicBeatState
 				stagebg = new BGSprite('stageback', -600, -200, 0.9, 0.9);
 				stagebg.alpha = 1;
 				add(stagebg);
-
-				stageFront = new BGSprite('stagefront', -650, 600, 0.9, 0.9);
-				stageFront.alpha = 1;
-				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-				stageFront.updateHitbox();
-				add(stageFront);
-
-
-				stageCurtains = new BGSprite('stagecurtains', -500, -300, 1.3, 1.3);
-				stageCurtains.alpha = 1;
-				stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-				stageCurtains.updateHitbox();
-
-				add(stageCurtains);
 
 			case 'spooky': //Week 2
 				if(!ClientPrefs.lowQuality) {
@@ -792,6 +773,22 @@ class PlayState extends MusicBeatState
 		blammedLightsBlack = modchartSprites.get('blammedLightsBlack');
 		blammedLightsBlack.alpha = 0.0;
 
+		noteBG = new FlxSprite(0,0);
+		noteBG.cameras = [camHUD];
+		noteBG.makeGraphic(1,1000,FlxColor.BLACK);
+
+		add(noteBG);
+
+		if(!ClientPrefs.middleScroll) {
+
+		noteBG2 = new FlxSprite(0,0);
+		noteBG2.cameras = [camHUD];
+		noteBG2.makeGraphic(1,1000,FlxColor.BLACK);
+
+		add(noteBG2);
+		}
+
+
 		var gfVersion:String = SONG.player3;
 		if(gfVersion == null || gfVersion.length < 1) {
 			switch (curStage)
@@ -990,7 +987,7 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
 
-		bsEnginewatermark = new FlxText(4, healthBarBG.y
+		bsEnginewatermark = new FlxText(20, healthBarBG.y
 			+ 50, 0,
 			FreeplayState.infoextended
 			+ " - "
@@ -1815,6 +1812,9 @@ class PlayState extends MusicBeatState
 		return FlxSort.byValues(FlxSort.ASCENDING, Obj1[0] - earlyTime1, Obj2[0] - earlyTime2);
 	}
 
+	var noteBG:FlxSprite;
+	var noteBG2:FlxSprite;
+
 	private function generateStaticArrows(player:Int):Void
 	{
 		for (i in 0...4)
@@ -1840,6 +1840,15 @@ class PlayState extends MusicBeatState
 			strumLineNotes.add(babyArrow);
 			babyArrow.postAddedToGroup();
 		}
+
+		if(player == 1 && ClientPrefs.focus)
+			{
+				updateNoteBGPos();
+				noteBG.alpha = 0.7;
+				if(!ClientPrefs.middleScroll) {
+				noteBG2.alpha = 0.7;
+				}
+			}
 	}
 
 	override function openSubState(SubState:FlxSubState)
@@ -2474,6 +2483,8 @@ class PlayState extends MusicBeatState
 					daNote.destroy();
 				}
 			});
+			if(ClientPrefs.focus)
+				updateNoteBGPos();
 		}
 		checkEventNote();
 
@@ -2984,8 +2995,8 @@ class PlayState extends MusicBeatState
 				var alturaBF:Int = Std.parseInt(value1);
 				var alturaDAD:Int = Std.parseInt(value2);
 
-				boyfriendGroup.x = alturaDAD + 770;
 				boyfriendGroup.y = alturaBF + 100;
+				boyfriendGroup.x = alturaDAD + 770;
 
 
 			case 'opaCidade':
@@ -2993,17 +3004,7 @@ class PlayState extends MusicBeatState
 				var opaCidade:Int = Std.parseInt(value2);
 	
 				if (elemento == 1) {				
-					blammedLightsBlackTween = FlxTween.tween(stageCurtains, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
-						onComplete: function(twn:FlxTween) {
-							blammedLightsBlackTween = null;
-						}
-					});
 					blammedLightsBlackTween = FlxTween.tween(stagebg, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
-						onComplete: function(twn:FlxTween) {
-							blammedLightsBlackTween = null;
-						}
-					});
-					blammedLightsBlackTween = FlxTween.tween(stageFront, {alpha: opaCidade}, 0.01, {ease: FlxEase.quadInOut,
 						onComplete: function(twn:FlxTween) {
 							blammedLightsBlackTween = null;
 						}
@@ -3101,6 +3102,26 @@ class PlayState extends MusicBeatState
 			tweenCamIn();
 		}
 		
+	}
+
+		function updateNoteBGPos()
+	{
+		if(startedCountdown)
+		{
+			noteBG.setGraphicSize(Std.int(Note.swagWidth * 4), FlxG.height * 2);
+			noteBG.updateHitbox();
+	
+			noteBG.x = playerStrums.members[0].x;
+
+			if(!ClientPrefs.middleScroll) {
+
+			noteBG2.setGraphicSize(Std.int(Note.swagWidth * 4), FlxG.height * 2);
+			noteBG2.updateHitbox();
+	
+			noteBG2.x = opponentStrums.members[0].x;
+
+			}
+		}
 	}
 
 	function tweenCamIn() {

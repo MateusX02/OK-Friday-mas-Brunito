@@ -11,24 +11,6 @@
 				"lengthInSteps": 16,
 				"altAnim": false,
 				"typeOfSection": 0,
-				"sectionNotes": [
-					[
-						0,
-						-1,
-						"Super Fade",
-						"0",
-						""
-					]
-				],
-				"bpm": 0,
-				"changeBPM": false,
-				"mustHitSection": false
-			},
-			{
-				"gfSection": false,
-				"lengthInSteps": 16,
-				"altAnim": false,
-				"typeOfSection": 0,
 				"sectionNotes": [],
 				"bpm": 0,
 				"changeBPM": false,
@@ -452,21 +434,21 @@
 				"typeOfSection": 0,
 				"sectionNotes": [
 					[
-						79615.3846153846,
+						79585.3846153846,
 						-1,
 						"Super Flash",
 						"2",
 						""
 					],
 					[
-						79871.7948717949,
+						79600.3846153846,
 						-1,
 						"Change Character",
 						"gf",
 						"gf-car"
 					],
 					[
-						79743.5897435898,
+						79610.3846153846,
 						-1,
 						"opaCidade",
 						"1",
@@ -484,7 +466,7 @@
 				"typeOfSection": 0,
 				"sectionNotes": [
 					[
-						80000,
+						79620,
 						-1,
 						"ChangeBG",
 						"-260",
@@ -642,21 +624,21 @@
 				"typeOfSection": 0,
 				"sectionNotes": [
 					[
-						112564.102564103,
+						112450.102564103,
 						-1,
 						"ChangeBG",
 						"0",
 						"0"
 					],
 					[
-						112435.897435897,
+						112440.897435897,
 						-1,
 						"Super Flash",
 						"4",
 						"0"
 					],
 					[
-						112692.307692308,
+						112460.307692308,
 						-1,
 						"Change Character",
 						"dad",
@@ -674,14 +656,14 @@
 				"typeOfSection": 0,
 				"sectionNotes": [
 					[
-						112948.717948718,
+						112450.717948718,
 						-1,
 						"Super Fade",
 						"1",
 						""
 					],
 					[
-						112820.512820513,
+						112460.512820513,
 						-1,
 						"opaCidade",
 						"1",

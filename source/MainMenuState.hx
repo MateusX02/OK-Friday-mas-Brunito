@@ -85,9 +85,9 @@ class MainMenuState extends MusicBeatState
         secreto.alpha = 0.75;
         add(secreto);
 	
-		storybotao = new FlxUIButton(0, 30, "APAGOU", function() {
+		storybotao = new FlxUIButton(0, 90, "APAGOU", function() {
 			curSelected = 0;
-			if(curSelected == 0 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 0 && checkiftouch == false && !selectedSomethin){selectedSomethin = true; checkiftouch = true;}
 		});
         storybotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		storybotao.resize(500,120);
@@ -95,9 +95,9 @@ class MainMenuState extends MusicBeatState
 		storybotao.screenCenter(X);
         add(storybotao);
 
-		freebotao = new FlxUIButton(0, 170, "OS", function() {
+		freebotao = new FlxUIButton(0, 230, "OS", function() {
 			curSelected = 1;
-			if(curSelected == 1 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 1 && checkiftouch == false && !selectedSomethin){selectedSomethin = true; checkiftouch = true;}
 		});
         freebotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		freebotao.resize(420,120);
@@ -105,9 +105,9 @@ class MainMenuState extends MusicBeatState
 		freebotao.screenCenter(X);
         add(freebotao);
 
-		creditbotao = new FlxUIButton(0, 450, "Né", function() {
+		creditbotao = new FlxUIButton(0, 510, "Né", function() {
 			curSelected = 3;
-			if(curSelected == 3 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 3 && checkiftouch == false && !selectedSomethin){selectedSomethin = true; checkiftouch = true;}
 			});
 		creditbotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		creditbotao.resize(420,120);
@@ -117,7 +117,7 @@ class MainMenuState extends MusicBeatState
 
 		opcaobotao = new FlxUIButton(0, 590, "SAFADO", function() {
 			curSelected = 4;
-			if(curSelected == 4 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 4 && checkiftouch == false && !selectedSomethin){selectedSomethin = true; checkiftouch = true;}
 		});
         opcaobotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		opcaobotao.resize(420,120);
@@ -125,9 +125,9 @@ class MainMenuState extends MusicBeatState
 		opcaobotao.screenCenter(X);
         add(opcaobotao);
 
-		awardsbotao = new FlxUIButton(0, 310, "MENUS", function() {
+		awardsbotao = new FlxUIButton(0, 370, "MENUS", function() {
 			curSelected = 2;		
-			if(curSelected == 2 && checkiftouch == false){selectedSomethin = true; checkiftouch = true;}
+			if(curSelected == 2 && checkiftouch == false && !selectedSomethin){selectedSomethin = true; checkiftouch = true;}
 					});
 		awardsbotao.setLabelFormat("VCR OSD Mono",24,FlxColor.BLACK,"center");
 		awardsbotao.resize(400,120);
@@ -136,7 +136,7 @@ class MainMenuState extends MusicBeatState
 		add(awardsbotao);
 
 		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuPRINCIPAL'));
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.scrollFactor.set(0, yScroll);
 		bg.setGraphicSize(Std.int(bg.width * 1.175));
 		bg.updateHitbox();
@@ -263,6 +263,8 @@ class MainMenuState extends MusicBeatState
 
 			if (checkiftouch)
 			{
+				checkiftouch = false; //This should be enough
+
 				if (optionShit[curSelected] == 'donate')
 				{
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
@@ -280,7 +282,6 @@ class MainMenuState extends MusicBeatState
 								onComplete: function(twn:FlxTween)
 								{
 									spr.kill();
-									checkiftouch = false; //This should be enough
 								}
 							});
 						}

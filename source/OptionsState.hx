@@ -812,6 +812,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 		'Luzes Piscantes',
 		'GAMEPLAY',
 		'Scroll customizado',
+		'Modo FOCUS',
 		'Velocidade do scroll',
 		'Tamanho da nota',
 		'Downscroll',
@@ -821,13 +822,12 @@ class PreferencesSubstate extends MusicBeatSubstate
 		'Volume do osu',
 		'Delay na nota',
 		'OTIMIZACAO',
-		'BF Reanimado',
+	//	'Movimento de camera',
 		'Pular Cutscenes',
 		'Pular dialogos',
 		'Remover GF',
 		'Reducao grafica',
-		'Anti-Aliasing',
-		'So isso kek'
+		'Anti-Aliasing'
 	];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -983,7 +983,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 					case 'Luzes Piscantes':
 						ClientPrefs.flashing = !ClientPrefs.flashing;
 
-					case 'BF Reanimado':
+					case 'Movimento de camera':
 						ClientPrefs.cenoptim = !ClientPrefs.cenoptim;
 
 					case 'Pular Cutscenes':
@@ -998,6 +998,9 @@ class PreferencesSubstate extends MusicBeatSubstate
 
 					case 'Som de OSU':
 						ClientPrefs.hitSounds = !ClientPrefs.hitSounds;
+
+					case 'Modo FOCUS':
+						ClientPrefs.focus = !ClientPrefs.focus;
 
 					case 'Swearing':
 						ClientPrefs.cursing = !ClientPrefs.cursing;
@@ -1136,14 +1139,16 @@ class PreferencesSubstate extends MusicBeatSubstate
 				daText = "Sei la que disgrama e isso";
 			case 'Som de OSU':
 				daText = "Tap Tap";
+			case 'Modo FOCUS':
+				daText = "Isso foi especialmente construido para \n Stress mas é uma animação jogável \n Mas... basicamente cria um fundo preto na nota";
 			case 'Volume do osu':
 				daText = "Volume do Tap Tap";
 			case 'Efeito Splash na nota':
 				daText = "yuhu as setas fazem kabum (no bom sentido)";
 			case 'Luzes Piscantes':
 				daText = "Deixe desmarcado caso tenha problemas com epilepsia";
-			case 'BF Reanimado':
-				daText = "Se desativado, tu jogaras com um bf normal";
+			case 'Movimento de camera':
+				daText = "Yeah, movimentos, fluidez wooooooooow";
 			case 'Pular Cutscenes':
 				daText = "Auto-Explicativo eu acho";	
 			case 'Pular dialogos':
@@ -1208,7 +1213,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 						daValue = ClientPrefs.noteSplashes;
 					case 'Luzes Piscantes':
 						daValue = ClientPrefs.flashing;
-					case 'BF Reanimado':
+					case 'Movimento de camera':
 						daValue = ClientPrefs.cenoptim;
 					case 'Pular Cutscenes':
 						daValue = ClientPrefs.dacut;
@@ -1228,6 +1233,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 						daValue = ClientPrefs.cursing;
 					case 'Som de OSU':
 						daValue = ClientPrefs.hitSounds;
+					case 'Modo FOCUS':
+						daValue = ClientPrefs.focus;
 					case 'Efeitos de camera':
 						daValue = ClientPrefs.camZooms;
 					case 'Ocultar HUD':

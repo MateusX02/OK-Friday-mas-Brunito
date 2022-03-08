@@ -42,7 +42,8 @@ class PreFreeplayState extends MusicBeatState
 
 //	var grpWeekText:FlxTypedGroup<MenuItem>;
 
-	//var logoBl:FlxButton;
+	var botaoAceitar:FlxButton;
+	var botaoVoltar:FlxButton;
 
 	var leftArrow:FlxButton;
 	var rightArrow:FlxButton;
@@ -65,6 +66,21 @@ class PreFreeplayState extends MusicBeatState
 
 		//grpWeekText = new FlxTypedGroup<MenuItem>();
 	//	add(grpWeekText);
+
+		botaoAceitar = new FlxButton(FlxG.width - 150,	FlxG.height - 50, '');
+		botaoAceitar.loadGraphic(Paths.image('aceitas'));
+		botaoAceitar.updateHitbox();
+		botaoAceitar.antialiasing = ClientPrefs.globalAntialiasing;
+		//botaoAceitar.setGraphicSize(Std.int(logoBl.width));
+
+
+		botaoVoltar = new FlxButton(FlxG.width - 300,	FlxG.height - 50, '');
+		botaoVoltar.loadGraphic(Paths.image('retornas'));
+		botaoVoltar.updateHitbox();
+		botaoVoltar.antialiasing = ClientPrefs.globalAntialiasing;
+		//botaoVoltaar.setGraphicSize(Std.int(logoBl.width));
+
+
 
 
 	/*	for (i in 0...WeekData.weeksList.length)
@@ -98,6 +114,8 @@ class PreFreeplayState extends MusicBeatState
 
 	//	add(bgYellow);
 		add(bgSprite);
+		add(botaoVoltar);
+		add(botaoAceitar);
 	//	add(grpWeekCharacters);
 		//add(machine);
 /*
